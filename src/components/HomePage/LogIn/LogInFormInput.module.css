@@ -1,0 +1,49 @@
+.loginStyle {
+  width: 90%;
+  max-width: 40rem;
+  margin: 2rem auto;
+  padding: 2rem;
+}
+
+.contents {
+  margin: 1rem 0;
+  display: flex;
+  align-items: stretch;
+  flex-direction: row;
+}
+
+.contents label,
+.contents input {
+  display: block;
+}
+
+.contents label {
+  font-weight: bold;
+  flex: 1;
+  color: #464646;
+  margin-bottom: 0.5rem;
+}
+
+.contents input {
+  flex: 3;
+  font: inherit;
+  padding: 0.35rem 0.35rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+}
+
+.contents input:focus {
+  outline: none;
+  border-color: #4f005f;
+  background: #f6dbfc;
+}
+
+.btn {
+  text-align: center;
+}
+
+/* varifying validity */
+.contents.invalid input {
+  border-color: red;
+  background: #fbdada;
+}
