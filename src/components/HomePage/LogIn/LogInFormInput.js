@@ -1,39 +1,66 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useReducer, useState } from "react";
 import Button from "../../UI/Button/Button";
 import Card from "../../UI/Card/Card";
 import style from "./LogInFormInput.module.css";
 
+// UseReducer for Email
+const emailFunction = (state, action) => {
+  if (action.type === "collectEmail") {
+    return {value: action.val, isValid: action.val.includes("@") }
+  }
+  if (action.type === "emailValidity") {
+    return{value: state.value, isValid: state.value.includes("@")}
+  }
+
+  return{value: "", isValid: null}
+}
+
+// UseReducer for Password
+const passwordFunction = (state, action) => {
+  if (action.type === "collectPassword") {
+    return{value: action.val, isValid: action.val.trim().length > 6}
+  }
+  if (action.type === "passwordValidity") {
+    return{value: state.value, isValid: state.value.trim().length > 6}
+  }
+
+  return{value: "", isValid: null}
+}
 const LogInFormInput = (props) => {
   let [outMail, inMail] = useState("");
   let [outPass, inPass] = useState("");
   let [validateForm, setValidateForm] = useState(false);
-  let [outEmailBlurValidation, emailBlurValidation] = useState();
-  let [outPasswordBlurValidation, passwordBlurValidation] = useState();
 
+  const {isValid: emailValid} = emailState;
+  const {isValid: passwordValid} = passwordState
   useEffect(() => {
-    setValidateForm(outMail.includes("@") && outPass.trim().length > 6);
-  }, [outMail, outPass]);
+    setValidateForm(emailValid && passwordValid);
+  }, [emailValid, passwordValid]);
+
+
   const mailChange = (event) => {
-    inMail(event.target.value);
+    emailStateFunction({type: "collectEmail", val:event.target.value});
+    // setValidateForm(event.target.value.includes("@") && outPass.trim().length > 6)
   };
 
   const passChange = (event) => {
-    inPass(event.target.value);
+    passwordStateFunction({type: "collectPassword", val:event.target.value})
+    // setValidateForm(event.target.value.trim().length > 6 && outMail.includes("@"))
   };
 
   const validateEmail = () => {
-    emailBlurValidation(outMail.includes("@"));
+    emailStateFunction({type: "emailValidity"})
   };
 
   const validatePassword = () => {
-    passwordBlurValidation(outPass.trim().length < 6)
+    passwordStateFunction({type: "passwordValidity"})
   }
 
   const FormSubmit = (event) => {
     event.preventDefault();
     const inflatedData = {
-      email: outMail,
-      password: outPass,
+      email: emailState.value,
+      password: passwordState.value
     };
     props.onGetLogIn(inflatedData);
   };
@@ -41,7 +68,7 @@ const LogInFormInput = (props) => {
   return (
     <Card className={style.loginStyle}>
       <form onSubmit={FormSubmit}>
-        <div className={`${style.contents} ${outEmailBlurValidation === false ? style.invalid : ''}`}>
+        <div className={`${style.contents} ${emailState.isValid === false ? style.invalid : ''}`}>
           <label htmlFor="mail">Email</label>
           <input
             id="mail"
@@ -51,7 +78,7 @@ const LogInFormInput = (props) => {
             onBlur={validateEmail}
           />
         </div>
-        <div className={`${style.contents} ${outPasswordBlurValidation === false ? style.invalid : ''}`}>
+        <div className={`${style.contents} ${passwordState.isValid === false ? style.invalid : ''}`}>
           <label htmlFor="pass">Password</label>
           <input
             id="pass"
