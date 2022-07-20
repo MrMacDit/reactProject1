@@ -1,27 +1,30 @@
-import React from "react";
+import React, { useContext } from "react";
 import style from "./NavLists.module.css";
+import Authorize from "../../../letsStore/authorizaation";
 
 const NavLists = (props) => {
+  let auth = useContext(Authorize)
   return (
     <nav className={style.nav}>
       <ul>
-        {props.onNavLists && (
+        {auth.whenLogIn && (
           <li>
             <a href="/">Users</a>
           </li>
         )}
-        {props.onNavLists && (
+        {auth.whenLogIn && (
           <li>
             <a href="/">Admin</a>
           </li>
         )}
-        {props.onNavLists && (
+        {auth.whenLogIn && (
           <li>
             <button type="button" onClick={props.onGetLogOut}>
               Log Out
             </button>
           </li>
         )}
+        {/* Sign Out Button */}
         {props.onSignOut && (
           <li>
             <button>Sign Up</button>

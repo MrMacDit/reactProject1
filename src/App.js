@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import Home from "./components/HomePage/Home/HomeDisplay/Home";
 import LogInFormInput from "./components/HomePage/LogIn/LogInFormInput";
 import NavTitle from "./components/HomePage/NavBar/NavTitle";
+import Authorize from "./letsStore/authorizaation";
 const App = () => {
   let [isLoggedIn, setIsLoggedIn] = useState(false);
 
@@ -24,13 +25,16 @@ const App = () => {
   
   
   return (
-    <React.Fragment>
-      <NavTitle onSignOut={!isLoggedIn} onNavLists={isLoggedIn} onGetLogOut={logMeOut}/>
+    <Authorize.Provider
+    value={{
+      whenLogIn: isLoggedIn
+    }}>
+      <NavTitle onSignOut={!isLoggedIn} onGetLogOut={logMeOut}/>
       <main>
       {isLoggedIn && <Home />}
       {!isLoggedIn && <LogInFormInput onGetLogIn={dataFromLogIn} />}
       </main>
-    </React.Fragment>
+    </Authorize.Provider>
   );
 };
 export default App;
